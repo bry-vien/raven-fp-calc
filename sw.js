@@ -1,4 +1,4 @@
-const CACHE_NAME = 'panda-remit-v1';
+const CACHE_NAME = 'panda-remit-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -11,6 +11,19 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
+    })
+  );
+});
+
+// Activate and clean up old caches (This is the new part that deletes v1)
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keyList) => {
+      return Promise.all(keyList.map((key) => {
+        if (key !== CACHE_NAME) {
+          return caches.delete(key);
+        }
+      }));
     })
   );
 });
