@@ -1,16 +1,18 @@
 {
   "short_name": "PandaRemit",
   "name": "Foodpanda Remittance Calculator",
+  "description": "Automated remittance calculator for Foodpanda operations.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1a1a1a",
+  "background_color": "#f4f4f4",
   "icons": [
     {
-      "src": "https://www.foodpanda.com/wp-content/uploads/2023/04/Panda-Head-Digital-Pink-Background-1.png",
-      "type": "image/png",
-      "sizes": "512x512",
+      "src": "./logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
       "purpose": "any maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#1a1a1a",
-  "background_color": "#f4f4f4"
+  ]
 }
