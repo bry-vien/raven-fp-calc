@@ -122,6 +122,20 @@ display:none;
 
 .history-date{font-weight:700;font-style:italic;font-size:13px;}
 .footer-note{margin-top:auto;padding-top:40px;font-style:italic;color:#888;font-size:14px;text-align:center;}
+
+.btn-copy{
+background:transparent;
+border:1.5px solid currentColor;
+border-radius:8px;
+padding:5px 10px;
+font-size:13px;
+font-weight:600;
+cursor:pointer;
+opacity:0.6;
+transition:opacity 0.2s;
+flex-shrink:0;
+}
+.btn-copy:active{opacity:1;}
 </style>
 </head>
 
@@ -158,6 +172,7 @@ display:none;
 <span class="result-title remit-text">💸 Amount to Remit:</span>
 <div class="result-flex">
 <span class="result-val remit-text" id="res-remit">₱0.00</span>
+<button class="btn-copy remit-text" onclick="copyRemit(this)" title="Copy amount">Copy</button>
 </div>
 </div>
 
@@ -196,6 +211,15 @@ if(gross<550)return "Galing ah! 🤩";
 if(gross<800)return "Sheesh, ganado siya! 😮";
 if(gross<1200)return "Tangina, grabe oh! 🫨";
 return "Tangina, paldo si gago! 🤪";
+}
+
+function copyRemit(btn){
+const text=resRemit.innerText.replace('₱','').replace(/,/g,'');
+navigator.clipboard.writeText(text).then(()=>{
+const orig=btn.innerText;
+btn.innerText="Copied!";
+setTimeout(()=>btn.innerText=orig,1500);
+});
 }
 
 function calculate(){
