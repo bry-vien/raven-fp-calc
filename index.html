@@ -1,254 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>PandaRemit</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --fp-pink: #d70f64;
-            --fp-pink-muted: #b00354;
-            --fp-black: #1a1a1a;
-            --bg-matte: #f4f4f4;
-            --text-gray: #555;
-            --remit-red: #b03024;
-            --gross-green: #219653;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PandaRemit</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+<style>
+:root {
+--fp-pink:#d70f64;
+--fp-black:#1a1a1a;
+--bg-matte:#f4f4f4;
+--text-gray:#777;
+--remit-red:#b03024;
+--remit-red-dark:#7a1c14;
+--gross-green:#219653;
+}
 
-        body {
-            font-family: 'Lexend', sans-serif;
-            background-color: var(--bg-matte);
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
-            color: var(--fp-black);
-            margin: 0;
-            padding: env(safe-area-inset-top) 20px 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
-        header { text-align: center; margin-bottom: 30px; margin-top: 25px; }
-        .logo { width: 75px; height: 75px; margin-bottom: 10px; }
-        h1 { margin: 0; font-size: 26px; font-weight: 700; color: var(--fp-pink); }
-        .subtitle { font-size: 16px; color: var(--text-gray); font-weight: 300; margin-top: 4px; }
+body{
+font-family:'Lexend',sans-serif;
+background:var(--bg-matte);
+margin:0;
+padding:env(safe-area-inset-top) 20px 40px 20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+color:var(--fp-black);
+}
 
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            width: 100%;
-            max-width: 380px;
-            margin-bottom: 20px;
-        }
+header{text-align:center;margin:25px 0 30px;}
+.logo{width:100px;height:100px;margin-bottom:10px;}
+h1{margin:0;font-size:32px;font-weight:700;color:var(--fp-pink);}
+.subtitle{font-size:18px;font-weight:700;margin-top:4px;}
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 10px; font-size: 16px; font-weight: 400; color: var(--fp-black); }
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .currency-symbol {
-            position: absolute;
-            left: 18px;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--fp-black);
-        }
-        input {
-            width: 100%;
-            padding: 16px 16px 16px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-family: 'Lexend', sans-serif;
-            font-size: 18px;
-            background: #fafafa;
-            color: var(--fp-black);
-            font-weight: 600;
-        }
-        input:focus { outline: none; border-color: var(--fp-pink); background: white; }
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
+width:100%;
+max-width:380px;
+margin-bottom:20px;
+}
 
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: none;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-main { background: var(--fp-black); color: white; margin-top: 10px; }
-        
-        .btn-clear { background: transparent; color: var(--text-gray); font-weight: 400; font-size: 15px; margin-top: 15px; text-decoration: underline; }
-        .btn-history { background: #e0e0e0; color: var(--fp-black); font-size: 14px; padding: 10px 15px; margin-top: 25px; width: auto; border-radius: 8px; font-weight: 600; }
+.input-group{margin-bottom:20px;}
+label{display:block;margin-bottom:10px;font-size:16px;}
+.input-wrapper{position:relative;display:flex;align-items:center;}
+.currency-symbol{position:absolute;left:18px;font-weight:600;}
+input{
+width:100%;
+padding:16px 16px 16px 45px;
+border:2px solid #e0e0e0;
+border-radius:12px;
+font-size:18px;
+font-weight:600;
+background:#fafafa;
+}
+input:focus{outline:none;border-color:var(--fp-pink);background:white;}
 
-        .result-box {
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-        }
-        .remit-bg { background: #fdf2f2; border: 1px solid #fadbd8; }
-        .gross-bg { background: #f0fdf4; border: 1px solid #d4efdf; }
-        
-        .result-title { display: block; font-size: 16px; margin-bottom: 10px; font-weight: 600; }
-        .result-flex { display: flex; justify-content: space-between; align-items: center; }
-        .result-val { font-weight: 700; font-size: 26px; }
-        
-        .remit-text { color: var(--remit-red); }
-        .gross-text { color: var(--gross-green); }
+.btn{
+width:100%;
+padding:16px;
+border-radius:12px;
+border:none;
+font-weight:700;
+font-size:18px;
+cursor:pointer;
+}
+.btn-main{background:var(--fp-black);color:white;margin-top:10px;}
+.btn-clear{
+background:transparent;
+color:var(--text-gray);
+font-size:15px;
+text-decoration:underline;
+margin-top:15px;
+}
+.btn-history{
+background:#e0e0e0;
+color:var(--fp-black);
+font-size:14px;
+padding:10px 15px;
+margin-top:15px;
+border-radius:8px;
+}
+.btn-calc-toggle{
+background:#d5d5d5;
+color:var(--fp-black);
+font-size:14px;
+padding:10px 15px;
+margin-top:15px;
+border-radius:8px;
+}
 
-        .btn-copy { background: white; color: var(--remit-red); border: 2px solid var(--remit-red); padding: 8px 16px; font-size: 14px; border-radius: 8px; width: auto; font-weight: 700; }
+.result-box{padding:20px;border-radius:16px;margin-bottom:15px;}
+.remit-bg{background:#fdf2f2;border:1px solid #fadbd8;}
+.remit-negative{background:#f5d4d2;border:1px solid var(--remit-red-dark);}
+.gross-bg{background:#f0fdf4;border:1px solid #d4efdf;}
 
-        #history-section { width: 100%; max-width: 380px; margin-top: 35px; font-size: 14px; border-top: 2px solid #ddd; padding-top: 20px; }
-        .history-item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: var(--fp-black); }
-        .history-date { font-weight: 700; font-style: italic; display: block; margin-bottom: 4px; font-size: 13px; }
+.result-title{display:block;font-weight:600;margin-bottom:10px;}
+.result-flex{display:flex;justify-content:space-between;align-items:center;}
+.result-val{font-weight:700;font-size:26px;}
+.remit-text{color:var(--remit-red);}
+.remit-negative-text{color:var(--remit-red-dark);}
+.gross-text{color:var(--gross-green);}
 
-        .footer-note { margin-top: auto; padding-top: 50px; font-style: italic; color: #888; font-size: 14px; text-align: center; }
-    </style>
+.remark{margin-top:8px;font-weight:700;font-size:15px;}
+.small-note{margin-top:4px;font-size:13px;color:var(--text-gray);}
+
+.calc-card{
+background:#f1f1f1;
+padding:20px;
+border-radius:16px;
+margin-bottom:20px;
+display:none;
+}
+
+.history-date{font-weight:700;font-style:italic;font-size:13px;}
+.footer-note{margin-top:auto;padding-top:40px;font-style:italic;color:#888;font-size:14px;text-align:center;}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <img class="logo" src="logo.svg" alt="foodpanda logo">
-        <h1>foodpanda</h1>
-        <div class="subtitle">Remittance Calculator for Raven</div>
-    </header>
+<header>
+<img class="logo" src="logo.svg">
+<h1>foodpanda</h1>
+<div class="subtitle">Remittance Calculator for Raven</div>
+</header>
 
-    <div class="card">
-        <div class="input-group">
-            <label>👛 <b>Wallet</b> Amount</label>
-            <div class="input-wrapper">
-                <span class="currency-symbol">₱</span>
-                <input type="number" id="wallet" placeholder="0.00" step="0.01" inputmode="decimal">
-            </div>
-        </div>
-        <div class="input-group">
-            <label>💵 Total <b>Payment</b></label>
-            <div class="input-wrapper">
-                <span class="currency-symbol">₱</span>
-                <input type="number" id="earnings" placeholder="0.00" step="0.01" inputmode="decimal">
-            </div>
-        </div>
-        <button class="btn btn-main" onclick="calculate()">Calculate</button>
-    </div>
+<div class="card">
+<div class="input-group">
+<label>👛 <b>Wallet</b> Amount</label>
+<div class="input-wrapper">
+<span class="currency-symbol">₱</span>
+<input type="number" id="wallet" step="0.01">
+</div>
+</div>
 
-    <div class="card" id="result-card" style="display:none;">
-        <div class="result-box remit-bg">
-            <span class="result-title remit-text">💸 Amount to Remit:</span>
-            <div class="result-flex">
-                <span class="result-val remit-text" id="res-remit">₱0.00</span>
-                <button class="btn btn-copy" id="copy-btn" onclick="copyRemit()">Copy</button>
-            </div>
-        </div>
-        
-        <div class="result-box gross-bg">
-            <span class="result-title gross-text">🤑 Gross Earnings:</span>
-            <div class="result-flex">
-                <span class="result-val gross-text" id="res-gross">₱0.00</span>
-            </div>
-        </div>
-    </div>
+<div class="input-group">
+<label>💵 Total <b>Payment</b></label>
+<div class="input-wrapper">
+<span class="currency-symbol">₱</span>
+<input type="number" id="earnings" step="0.01">
+</div>
+</div>
 
-    <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
-    <button class="btn btn-history" onclick="saveHistory()">Save to History</button>
+<button class="btn btn-main" onclick="calculate()">Calculate</button>
+</div>
 
-    <div id="history-section">
-        <div id="history-list"></div>
-    </div>
+<div class="card" id="result-card" style="display:none;">
+<div class="result-box remit-bg" id="remit-box">
+<span class="result-title remit-text">💸 Amount to Remit:</span>
+<div class="result-flex">
+<span class="result-val remit-text" id="res-remit">₱0.00</span>
+</div>
+</div>
 
-    <div class="footer-note">
-        Ingat lagi, wag ka magpasagasa dyan. 😘
-    </div>
+<div class="result-box gross-bg">
+<span class="result-title gross-text">🤑 Gross Earnings:</span>
+<div class="result-flex">
+<span class="result-val gross-text" id="res-gross">₱0.00</span>
+</div>
+<div id="remark" class="remark"></div>
+<div class="small-note">Cash tips not included.</div>
+</div>
+</div>
 
-    <script>
-        // Auto-format decimals on tap outside the box
-        document.getElementById('wallet').addEventListener('blur', function() {
-            if(this.value) this.value = parseFloat(this.value).toFixed(2);
-        });
-        document.getElementById('earnings').addEventListener('blur', function() {
-            if(this.value) this.value = parseFloat(this.value).toFixed(2);
-        });
+<div id="calc-section" class="calc-card"></div>
 
-        function formatNum(num) {
-            return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+<button class="btn btn-clear" onclick="clearAll()">Clear All</button>
+<button class="btn btn-calc-toggle" id="toggle-calc" style="display:none;" onclick="toggleCalc()">Show Calculations</button>
+<button class="btn btn-history" id="save-history" style="display:none;" onclick="saveHistory()">Save to History</button>
 
-        function calculate() {
-            const wallet = parseFloat(document.getElementById('wallet').value) || 0;
-            const total = parseFloat(document.getElementById('earnings').value) || 0;
-            
-            const gross = total * 0.98;
-            const remit = wallet - gross;
+<div id="history-section" style="max-width:380px;width:100%;margin-top:30px;">
+<div id="history-list"></div>
+</div>
 
-            document.getElementById('res-gross').innerText = '₱' + formatNum(gross);
-            document.getElementById('res-remit').innerText = '₱' + formatNum(remit);
-            document.getElementById('result-card').style.display = 'block';
-        }
+<div class="footer-note">Ingat lagi, wag ka magpasagasa dyan. 😘</div>
 
-        function copyRemit() {
-            const val = document.getElementById('res-remit').innerText.replace('₱', '').replace(/,/g, '');
-            navigator.clipboard.writeText(val);
-            const btn = document.getElementById('copy-btn');
-            btn.innerText = "Copied!";
-            btn.style.backgroundColor = "var(--remit-red)";
-            btn.style.color = "white";
-            setTimeout(() => { 
-                btn.innerText = "Copy"; 
-                btn.style.backgroundColor = "white";
-                btn.style.color = "var(--remit-red)";
-            }, 2000);
-        }
+<script>
+function formatNum(num){
+return num.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 
-        function clearAll() {
-            document.getElementById('wallet').value = '';
-            document.getElementById('earnings').value = '';
-            document.getElementById('result-card').style.display = 'none';
-        }
+function getRemark(gross){
+if(gross<=0)return "";
+if(gross<100)return "Hina 🤣";
+if(gross<250)return "Nice! 👍";
+if(gross<550)return "Galing ah! 🤩";
+if(gross<800)return "Sheesh, ganado siya! 😮";
+if(gross<1200)return "Tangina, grabe oh! 🫨";
+return "Tangina, paldo si gago! 🤪";
+}
 
-        function saveHistory() {
-            const remit = document.getElementById('res-remit').innerText;
-            const gross = document.getElementById('res-gross').innerText;
-            if(remit === "₱0.00") return;
+function calculate(){
+const wallet=parseFloat(walletInput.value)||0;
+const total=parseFloat(earningsInput.value)||0;
+const tax=total*0.02;
+const gross=total-tax;
+const remit=wallet-gross;
 
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            
-            const entry = { date: dateStr, remit, gross };
-            let history = JSON.parse(localStorage.getItem('pandaHistory') || '[]');
-            history.unshift(entry);
-            if(history.length > 5) history.pop();
-            localStorage.setItem('pandaHistory', JSON.stringify(history));
-            renderHistory();
-        }
+resGross.innerText="₱"+formatNum(gross);
+resRemit.innerText="₱"+formatNum(remit);
 
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('pandaHistory') || '[]');
-            const list = document.getElementById('history-list');
-            list.innerHTML = history.map(item => `
-                <div class="history-item">
-                    <span class="history-date">${item.date}</span>
-                    Amount to Remit: <b>${item.remit}</b><br>
-                    Gross Earnings: <b>${item.gross}</b>
-                </div>
-            `).join('');
-        }
+resultCard.style.display="block";
+toggleBtn.style.display="block";
+saveBtn.style.display="block";
 
-        window.onload = renderHistory;
+const remarkText=getRemark(gross);
+remarkDiv.innerText=remarkText;
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
+if(remit<0){
+remitBox.classList.add("remit-negative");
+resRemit.classList.remove("remit-text");
+resRemit.classList.add("remit-negative-text");
+}else{
+remitBox.classList.remove("remit-negative");
+resRemit.classList.add("remit-text");
+resRemit.classList.remove("remit-negative-text");
+}
+
+updateCalc(wallet,total,tax,gross,remit);
+}
+
+function updateCalc(wallet,total,tax,gross,remit){
+if(calcSection.style.display==="none")return;
+calcSection.innerHTML=`
+📊 <b>Calculation Breakdown</b><br><br>
+Wallet Amount: ₱${formatNum(wallet)}<br>
+Total Payment: ₱${formatNum(total)}<br><br>
+Withholding Tax (2% of Total Payment):<br>
+₱${formatNum(total)} × 0.02 = ₱${formatNum(tax)}<br><br>
+Gross Earnings:<br>
+₱${formatNum(total)} − ₱${formatNum(tax)} = ₱${formatNum(gross)}<br><br>
+Amount to Remit:<br>
+₱${formatNum(wallet)} − ₱${formatNum(gross)} = ₱${formatNum(remit)}
+`;
+}
+
+function toggleCalc(){
+if(calcSection.style.display==="none"){
+calcSection.style.display="block";
+toggleBtn.innerText="Hide Calculations";
+calculate();
+}else{
+calcSection.style.display="none";
+toggleBtn.innerText="Show Calculations";
+}
+}
+
+function clearAll(){
+walletInput.value="";
+earningsInput.value="";
+resultCard.style.display="none";
+toggleBtn.style.display="none";
+saveBtn.style.display="none";
+calcSection.style.display="none";
+toggleBtn.innerText="Show Calculations";
+remarkDiv.innerText="";
+}
+
+function saveHistory(){
+const now=new Date();
+const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+const entry={
+date:`${dateStr} | ${timeStr}`,
+remit:resRemit.innerText,
+gross:resGross.innerText
+};
+let history=JSON.parse(localStorage.getItem('pandaHistory')||'[]');
+history.unshift(entry);
+if(history.length>5)history.pop();
+localStorage.setItem('pandaHistory',JSON.stringify(history));
+renderHistory();
+}
+
+function renderHistory(){
+let history=JSON.parse(localStorage.getItem('pandaHistory')||'[]');
+historyList.innerHTML=history.map(item=>`
+<div style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
+<span class="history-date">${item.date}</span><br>
+Amount to Remit: <b>${item.remit}</b><br>
+Gross Earnings: <b>${item.gross}</b>
+</div>`).join('');
+}
+
+const walletInput=document.getElementById("wallet");
+const earningsInput=document.getElementById("earnings");
+const resGross=document.getElementById("res-gross");
+const resRemit=document.getElementById("res-remit");
+const resultCard=document.getElementById("result-card");
+const toggleBtn=document.getElementById("toggle-calc");
+const saveBtn=document.getElementById("save-history");
+const calcSection=document.getElementById("calc-section");
+const remarkDiv=document.getElementById("remark");
+const remitBox=document.getElementById("remit-box");
+const historyList=document.getElementById("history-list");
+
+walletInput.addEventListener("input",()=>calculate());
+earningsInput.addEventListener("input",()=>calculate());
+
+window.onload=renderHistory;
+
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('sw.js');
+}
+</script>
 </body>
 </html>
