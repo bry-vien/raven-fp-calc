@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --fp-pink: #d70466;
+            --fp-pink: #d70f64;
             --fp-pink-muted: #b00354;
             --fp-black: #1a1a1a;
             --bg-matte: #f4f4f4;
@@ -24,8 +24,7 @@
         body {
             font-family: 'Lexend', sans-serif;
             background-color: var(--bg-matte);
-            /* Opacity increased to 15% for a highly visible matte texture */
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
             color: var(--fp-black);
             margin: 0;
             padding: env(safe-area-inset-top) 20px 40px 20px;
@@ -36,8 +35,8 @@
         }
 
         header { text-align: center; margin-bottom: 30px; margin-top: 25px; }
-        .logo { width: 75px; height: 75px; fill: var(--fp-black); margin-bottom: 10px; }
-        h1 { margin: 0; font-size: 26px; font-weight: 700; color: var(--fp-pink-muted); }
+        .logo { width: 75px; height: 75px; margin-bottom: 10px; }
+        h1 { margin: 0; font-size: 26px; font-weight: 700; color: var(--fp-pink); }
         .subtitle { font-size: 16px; color: var(--text-gray); font-weight: 300; margin-top: 4px; }
 
         .card {
@@ -75,7 +74,7 @@
             color: var(--fp-black);
             font-weight: 600;
         }
-        input:focus { outline: none; border-color: var(--fp-pink-muted); background: white; }
+        input:focus { outline: none; border-color: var(--fp-pink); background: white; }
 
         .btn {
             width: 100%;
@@ -91,13 +90,9 @@
         .btn:active { transform: scale(0.98); }
         .btn-main { background: var(--fp-black); color: white; margin-top: 10px; }
         
-        /* 1-Tap Install Button - Hidden by default until Android allows it */
-        #install-btn { background: var(--fp-pink-muted); color: white; margin-bottom: 20px; display: none; max-width: 380px; }
-
         .btn-clear { background: transparent; color: var(--text-gray); font-weight: 400; font-size: 15px; margin-top: 15px; text-decoration: underline; }
         .btn-history { background: #e0e0e0; color: var(--fp-black); font-size: 14px; padding: 10px 15px; margin-top: 25px; width: auto; border-radius: 8px; font-weight: 600; }
 
-        /* Restyled Result Display Cards */
         .result-box {
             padding: 20px;
             border-radius: 16px;
@@ -125,14 +120,10 @@
 <body>
 
     <header>
-        <svg class="logo" viewBox="0 0 500 500">
-            <path d="M250 20C123 20 20 123 20 250s103 230 230 230 230-103 230-230S377 20 250 20zm87.5 130c20.7 0 37.5 16.8 37.5 37.5s-16.8 37.5-37.5 37.5-37.5-16.8-37.5-37.5 16.8-37.5 37.5-37.5zM162.5 150c20.7 0 37.5 16.8 37.5 37.5s-16.8 37.5-37.5 37.5-37.5-16.8-37.5-37.5 16.8-37.5 37.5-37.5zm87.5 240c-69 0-125-56-125-125h250c0 69-56 125-125 125z"/>
-        </svg>
-        <h1>Foodpanda</h1>
+        <img class="logo" src="logo.svg" alt="foodpanda logo">
+        <h1>foodpanda</h1>
         <div class="subtitle">Remittance Calculator for Raven</div>
     </header>
-
-    <button id="install-btn" class="btn">📲 Download App</button>
 
     <div class="card">
         <div class="input-group">
@@ -254,27 +245,6 @@
         }
 
         window.onload = renderHistory;
-
-        // PWA Install Logic (Path 1)
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-btn');
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block'; // Show the button when Android allows install
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    installBtn.style.display = 'none';
-                }
-                deferredPrompt = null;
-            }
-        });
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
