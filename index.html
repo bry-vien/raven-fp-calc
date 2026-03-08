@@ -136,6 +136,35 @@ transition:opacity 0.2s;
 flex-shrink:0;
 }
 .btn-copy:active{opacity:1;}
+
+/* New styles for error and delete button */
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 8px;
+    text-align: center;
+    min-height: 20px;
+}
+.history-item {
+    position: relative;
+    padding-right: 40px;
+}
+.delete-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+}
 </style>
 </head>
 
@@ -157,7 +186,7 @@ flex-shrink:0;
 </div>
 
 <div class="input-group">
-<label>💵 Total <b>Payment</b></label>
+<label>💵 Total <b>Payments</b></label>
 <div class="input-wrapper">
 <span class="currency-symbol">₱</span>
 <input type="number" id="earnings" step="0.01">
@@ -165,6 +194,7 @@ flex-shrink:0;
 </div>
 
 <button class="btn btn-main" onclick="calculate()">Calculate</button>
+<div id="error-message"></div>
 </div>
 
 <div class="card" id="result-card" style="display:none;">
@@ -200,65 +230,100 @@ flex-shrink:0;
 
 <script>
 function formatNum(num){
-return num.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    return num.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function formatInput(el) {
+    if (el.value === '') return;
+    let val = parseFloat(el.value);
+    if (!isNaN(val)) {
+        el.value = val.toFixed(2);
+    }
 }
 
 function getRemark(gross){
-if(gross<=0)return "";
-if(gross<100)return "Hina 🤣";
-if(gross<250)return "Nice! 👍";
-if(gross<550)return "Galing ah! 🤩";
-if(gross<800)return "Sheesh, ganado siya! 😮";
-if(gross<1200)return "Tangina, grabe oh! 🫨";
-return "Tangina, paldo si gago! 🤪";
+    if(gross<=0)return "";
+    if(gross<100)return "Hina 🤣";
+    if(gross<250)return "Nice! 👍";
+    if(gross<550)return "Galing ah! 🤩";
+    if(gross<800)return "Sheesh, ganado siya! 😮";
+    if(gross<1200)return "Tangina, grabe oh! 🫨";
+    return "Tangina, paldo si gago! 🤪";
 }
 
 function copyRemit(btn){
-const text=resRemit.innerText.replace('₱','').replace(/,/g,'');
-navigator.clipboard.writeText(text).then(()=>{
-const orig=btn.innerText;
-btn.innerText="Copied!";
-setTimeout(()=>btn.innerText=orig,1500);
-});
+    const text = resRemit.innerText.replace('₱','').replace(/,/g,'');
+    navigator.clipboard.writeText(text).then(()=>{
+        const orig = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(()=>btn.innerText=orig,1500);
+    });
+}
+
+function showError(msg) {
+    document.getElementById('error-message').innerText = msg;
+}
+
+function clearError() {
+    document.getElementById('error-message').innerText = "";
 }
 
 function calculate(){
-const wallet=parseFloat(walletInput.value)||0;
-const total=parseFloat(earningsInput.value)||0;
-const tax=total*0.02;
-const gross=total-tax;
-const remit=wallet-gross;
+    clearError();
 
-resGross.innerText="₱"+formatNum(gross);
-resRemit.innerText="₱"+formatNum(remit);
+    const walletStr = walletInput.value.trim();
+    const totalStr  = earningsInput.value.trim();
 
-resultCard.style.display="block";
-toggleBtn.style.display="block";
-saveBtn.style.display="block";
+    if (!walletStr && !totalStr) {
+        showError("Error: Please input Wallet Amount and Total Payments value to calculate.");
+        return;
+    }
+    if (!walletStr) {
+        showError("Error: Please input Wallet Amount value to calculate.");
+        return;
+    }
+    if (!totalStr) {
+        showError("Error: Please input Total Payments value to calculate.");
+        return;
+    }
 
-const remarkText=getRemark(gross);
-remarkDiv.innerText=remarkText;
+    const wallet = parseFloat(walletStr) || 0;
+    const total  = parseFloat(totalStr)  || 0;
 
-if(remit<0){
-remitBox.classList.add("remit-negative");
-resRemit.classList.remove("remit-text");
-resRemit.classList.add("remit-negative-text");
-}else{
-remitBox.classList.remove("remit-negative");
-resRemit.classList.add("remit-text");
-resRemit.classList.remove("remit-negative-text");
-}
+    const tax   = total * 0.02;
+    const gross = total - tax;
+    const remit = wallet - gross;
 
-updateCalc(wallet,total,tax,gross,remit);
+    resGross.innerText = "₱" + formatNum(gross);
+    resRemit.innerText = "₱" + formatNum(remit);
+
+    resultCard.style.display = "block";
+    toggleBtn.style.display  = "block";
+    saveBtn.style.display    = "block";
+
+    const remarkText = getRemark(gross);
+    remarkDiv.innerText = remarkText;
+
+    if(remit < 0){
+        remitBox.classList.add("remit-negative");
+        resRemit.classList.remove("remit-text");
+        resRemit.classList.add("remit-negative-text");
+    } else {
+        remitBox.classList.remove("remit-negative");
+        resRemit.classList.add("remit-text");
+        resRemit.classList.remove("remit-negative-text");
+    }
+
+    updateCalc(wallet, total, tax, gross, remit);
 }
 
 function updateCalc(wallet,total,tax,gross,remit){
-if(calcSection.style.display==="none")return;
-calcSection.innerHTML=`
+    if(calcSection.style.display==="none") return;
+    calcSection.innerHTML=`
 📊 <b>Calculation Breakdown</b><br><br>
 Wallet Amount: ₱${formatNum(wallet)}<br>
-Total Payment: ₱${formatNum(total)}<br><br>
-Withholding Tax (2% of Total Payment):<br>
+Total Payments: ₱${formatNum(total)}<br><br>
+Withholding Tax (2% of Total Payments):<br>
 ₱${formatNum(total)} × 0.02 = ₱${formatNum(tax)}<br><br>
 Gross Earnings:<br>
 ₱${formatNum(total)} − ₱${formatNum(tax)} = ₱${formatNum(gross)}<br><br>
@@ -268,69 +333,84 @@ Amount to Remit:<br>
 }
 
 function toggleCalc(){
-if(calcSection.style.display==="none"){
-calcSection.style.display="block";
-toggleBtn.innerText="Hide Calculations";
-calculate();
-}else{
-calcSection.style.display="none";
-toggleBtn.innerText="Show Calculations";
-}
+    if(calcSection.style.display==="none"){
+        calcSection.style.display="block";
+        toggleBtn.innerText="Hide Calculations";
+        calculate();
+    } else {
+        calcSection.style.display="none";
+        toggleBtn.innerText="Show Calculations";
+    }
 }
 
 function clearAll(){
-walletInput.value="";
-earningsInput.value="";
-resultCard.style.display="none";
-toggleBtn.style.display="none";
-saveBtn.style.display="none";
-calcSection.style.display="none";
-toggleBtn.innerText="Show Calculations";
-remarkDiv.innerText="";
+    walletInput.value="";
+    earningsInput.value="";
+    resultCard.style.display="none";
+    toggleBtn.style.display="none";
+    saveBtn.style.display="none";
+    calcSection.style.display="none";
+    toggleBtn.innerText="Show Calculations";
+    remarkDiv.innerText="";
+    clearError();
 }
 
 function saveHistory(){
-const now=new Date();
-const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-const timeStr=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
-const entry={
-date:`${dateStr} | ${timeStr}`,
-remit:resRemit.innerText,
-gross:resGross.innerText
-};
-let history=JSON.parse(localStorage.getItem('pandaHistory')||'[]');
-history.unshift(entry);
-if(history.length>5)history.pop();
-localStorage.setItem('pandaHistory',JSON.stringify(history));
-renderHistory();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const timeStr = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+    const entry = {
+        id: Date.now(), // unique id for deletion
+        date: `${dateStr} | ${timeStr}`,
+        remit: resRemit.innerText,
+        gross: resGross.innerText
+    };
+    let history = JSON.parse(localStorage.getItem('pandaHistory')||'[]');
+    history.unshift(entry);
+    if(history.length > 5) history.pop();
+    localStorage.setItem('pandaHistory', JSON.stringify(history));
+    renderHistory();
+}
+
+function deleteHistory(id) {
+    let history = JSON.parse(localStorage.getItem('pandaHistory')||'[]');
+    history = history.filter(item => item.id !== id);
+    localStorage.setItem('pandaHistory', JSON.stringify(history));
+    renderHistory();
 }
 
 function renderHistory(){
-let history=JSON.parse(localStorage.getItem('pandaHistory')||'[]');
-historyList.innerHTML=history.map(item=>`
-<div style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;">
-<span class="history-date">${item.date}</span><br>
-Amount to Remit: <b>${item.remit}</b><br>
-Gross Earnings: <b>${item.gross}</b>
-</div>`).join('');
+    let history = JSON.parse(localStorage.getItem('pandaHistory')||'[]');
+    historyList.innerHTML = history.map(item => `
+        <div class="history-item" style="margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;position:relative;">
+            <span class="history-date">${item.date}</span><br>
+            Amount to Remit: <b>${item.remit}</b><br>
+            Gross Earnings: <b>${item.gross}</b>
+            <button class="delete-btn" onclick="deleteHistory(${item.id})">X</button>
+        </div>
+    `).join('');
 }
 
-const walletInput=document.getElementById("wallet");
-const earningsInput=document.getElementById("earnings");
-const resGross=document.getElementById("res-gross");
-const resRemit=document.getElementById("res-remit");
-const resultCard=document.getElementById("result-card");
-const toggleBtn=document.getElementById("toggle-calc");
-const saveBtn=document.getElementById("save-history");
-const calcSection=document.getElementById("calc-section");
-const remarkDiv=document.getElementById("remark");
-const remitBox=document.getElementById("remit-box");
-const historyList=document.getElementById("history-list");
+const walletInput   = document.getElementById("wallet");
+const earningsInput = document.getElementById("earnings");
+const resGross      = document.getElementById("res-gross");
+const resRemit      = document.getElementById("res-remit");
+const resultCard    = document.getElementById("result-card");
+const toggleBtn     = document.getElementById("toggle-calc");
+const saveBtn       = document.getElementById("save-history");
+const calcSection   = document.getElementById("calc-section");
+const remarkDiv     = document.getElementById("remark");
+const remitBox      = document.getElementById("remit-box");
+const historyList   = document.getElementById("history-list");
 
-window.onload=renderHistory;
+// Auto-format to 2 decimals when focus leaves
+walletInput.addEventListener('blur', () => formatInput(walletInput));
+earningsInput.addEventListener('blur', () => formatInput(earningsInput));
+
+window.onload = renderHistory;
 
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js');
 }
 </script>
 </body>
